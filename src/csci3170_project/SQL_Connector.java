@@ -15,7 +15,7 @@ import java.util.List;
 public class SQL_Connector 
 {
     private static Connection connection = null;
-    public static Connect(String address, String username, String password)
+    public static void Connect(String address, String username, String password)
     {
         try
         {
