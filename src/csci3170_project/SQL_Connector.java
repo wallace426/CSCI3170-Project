@@ -48,4 +48,8 @@ public class SQL_Connector
         }
         return list;
     }
+    public static void Excute_NonReturnQuery(PreparedStatement ps) throws SQLException
+    {
+        ps.executeUpdate();
+    }
 }
