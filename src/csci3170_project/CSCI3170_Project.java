@@ -13,9 +13,9 @@ public class CSCI3170_Project {
     /**
      * @param args the command line arguments
      */
-    private SQL_Connector SQLconnector = new SQL_Connector("jdbc:mysql://projgw.cse.cuhk.edu.hk:2633/db40", "Group40", "CSCI3170");
     public static void main(String[] args) 
     {
+        SQL_Connector.Connect("jdbc:mysql://projgw.cse.cuhk.edu.hk:2633/db40", "Group40", "CSCI3170");
         String[] main_options = new String[] {"An adminstrator", "An employee", "An employer", "Exit"};
         while (true)
         {

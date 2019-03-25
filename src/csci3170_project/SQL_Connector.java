@@ -14,8 +14,8 @@ import java.util.List;
  */
 public class SQL_Connector 
 {
-    private Connection connection = null;
-    public SQL_Connector(String address, String username, String password)
+    private static Connection connection = null;
+    public static Connect(String address, String username, String password)
     {
         try
         {
@@ -29,11 +29,11 @@ public class SQL_Connector
              System.exit(0);
         }
     }
-    public PreparedStatement Create_PS(String sql) throws SQLException
+    public static PreparedStatement Create_PS(String sql) throws SQLException
     {
         return connection.prepareStatement(sql);
     }
-    public List<HashMap<String,Object>> Excute_Query(PreparedStatement ps) throws SQLException
+    public static List<HashMap<String,Object>> Excute_Query(PreparedStatement ps) throws SQLException
     {
         ResultSet results = ps.executeQuery();
         ResultSetMetaData md = results.getMetaData();
