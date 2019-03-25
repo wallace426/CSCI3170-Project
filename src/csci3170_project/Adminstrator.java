@@ -42,26 +42,40 @@ public class Adminstrator
     }
     private static void Create_Tables()
     {
-        String query = "CREATE TABLE Employee( Employee_ID varchar(6) primary key, Name varchar(30) not null, Expected_Salary integer, Experience integer, Skills varchar(50) not null);";
+        System.out.print("Processing... ");
+        String query = "";
+        query += "CREATE TABLE Employee( Employee_ID varchar(6) primary key, Name varchar(30) not null, Expected_Salary integer, Experience integer, Skills varchar(50) not null);";
+        query += "CREATE TABLE Company( Company varchar(30) primary key, Size integer, Founded integer );";
+        query += "CREATE TABLE Employer( Employer_ID varchar(6) primary key, Name varchar(30) not null, Company varchar(30) not null);";
         try 
         {
             PreparedStatement ps = SQL_Connector.Create_PS(query);
             SQL_Connector.Excute_NonReturnQuery(ps);
         } 
-        catch (SQLException ex) {
+        catch (SQLException ex) 
+        {
             System.out.println("[Error] " + ex);
+            return;
         }
+        System.out.println("Tables are created!");
     }
     private static void Delete_Tables()
     {
-        String query = "DROP TABLE Employee;";
+         System.out.print("Processing... ");
+        String query = "";
+        query += "DROP TABLE Employee;";
+        query += "DROP TABLE Company;";
+        query += "DROP TABLE Employer;";
         try 
         {
             PreparedStatement ps = SQL_Connector.Create_PS(query);
             SQL_Connector.Excute_NonReturnQuery(ps);
         } 
-        catch (SQLException ex) {
+        catch (SQLException ex) 
+        {
             System.out.println("[Error] " + ex);
+            return;
         }
+         System.out.println("Tables are deleted!");
     }
 }
