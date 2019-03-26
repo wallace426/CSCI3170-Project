@@ -33,6 +33,7 @@ public class SQL_Connector
     {
         return connection.prepareStatement(sql);
     }
+    //Example: result.get(0)["fieldname"]; Get the value in "fieldname" of the first result 
     public static List<HashMap<String,Object>> Excute_Query(PreparedStatement ps) throws SQLException
     {
         ResultSet results = ps.executeQuery();
@@ -44,6 +45,22 @@ public class SQL_Connector
             HashMap<String,Object> row = new HashMap<>(columns);
             for(int i=1; i<=columns; ++i) 
                 row.put(md.getColumnName(i), results.getObject(i));
+            list.add(row);
+        }
+        return list;
+    }
+    //Example: result[0][field index (an integer starting from 0)]; Get the value in first field of the first result 
+    public static List<Object[]> Excute_Query2(PreparedStatement ps) throws SQLException
+    {
+        ResultSet results = ps.executeQuery();
+        ResultSetMetaData md = results.getMetaData();
+        int columns = md.getColumnCount();
+        List<Object[]> list = new ArrayList<>();
+        while (results.next()) 
+        {
+            Object[] row = new Object[columns];
+            for(int i=1; i<=columns; ++i) 
+                row[i-1] = results.getObject(i);
             list.add(row);
         }
         return list;
