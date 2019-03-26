@@ -24,7 +24,7 @@ public class CSCI3170_Project {
                 Adminstrator.DoWork();
             else if (option == 2)
             {
-                
+                Employee.DoWork();
             }
             else if (option == 3)
             {
