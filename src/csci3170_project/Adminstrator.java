@@ -66,6 +66,7 @@ public class Adminstrator
     }
     private static void Load_Data()
     {
+        System.out.print("Processing... ");
         try 
         {
             for (String line : Files.readAllLines(FileSystems.getDefault().getPath("company.csv")))
