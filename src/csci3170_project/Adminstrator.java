@@ -149,8 +149,8 @@ public class Adminstrator
         query += "CREATE TABLE Company( Company varchar(30) primary key, Size integer, Founded integer );";
         query += "CREATE TABLE Employer( Employer_ID varchar(6) primary key, Name varchar(30) not null, Company varchar(30) not null);";
         query += "CREATE TABLE `Position`( Position_ID varchar(6) primary key, Position_Title varchar(30) not null, Salary integer, Experience integer, Status bool, Employer_ID varchar(6) not null, FOREIGN KEY (Employer_ID) REFERENCES Employer (Employer_ID));";
-        query += "CREATE TABLE Employment_History(  Position_ID varchar(6), Employer_ID varchar(6), Start DATE, End DATE,  primary key(Employer_ID, Start), FOREIGN KEY (Employer_ID) REFERENCES Employer (Employer_ID), FOREIGN KEY (Position_ID) REFERENCES Position (Position_ID));";
-        query += "CREATE TABLE marked(  Position_ID varchar(6), Employer_ID varchar(6), Status bool, primary key(Employer_ID, Position_ID), FOREIGN KEY (Employer_ID) REFERENCES Employer (Employer_ID), FOREIGN KEY (Position_ID) REFERENCES Position (Position_ID) );";
+        query += "CREATE TABLE Employment_History(  Position_ID varchar(6), Employee_ID varchar(6), Start DATE, End DATE,  primary key(Employee_ID, Start), FOREIGN KEY (Employee_ID) REFERENCES Employee (Employee_ID), FOREIGN KEY (Position_ID) REFERENCES Position (Position_ID));";
+        query += "CREATE TABLE marked(  Position_ID varchar(6), Employee_ID varchar(6), Status bool, primary key(Employee_ID, Position_ID), FOREIGN KEY (Employee_ID) REFERENCES Employee (Employee_ID), FOREIGN KEY (Position_ID) REFERENCES Position (Position_ID) );";
         try 
         {
             PreparedStatement ps = SQL_Connector.Create_PS(query);
