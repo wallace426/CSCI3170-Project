@@ -27,9 +27,7 @@ public class CSCI3170_Project {
                 Employee.DoWork();
             }
             else if (option == 3)
-            {
-                
-            }
+                Employer.DoWork();
             else if (option == 4)
             {
                 break;
