@@ -24,7 +24,7 @@ public class SQL_Connector
         }
         catch (Exception e)
         {
-             System.out.println("Error");
+             System.out.println("Error when connecting to the DB");
              System.out.println(e.toString());
              System.exit(0);
         }
