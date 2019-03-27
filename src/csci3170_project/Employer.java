@@ -7,7 +7,12 @@ package csci3170_project;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.time.Clock;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -37,7 +42,7 @@ public class Employer
     }
     private static void Accept_Employee()
     {
-         String employer_id = "", employee_id ="";
+         String employer_id = "", employee_id ="", company = "";
          try
          {
             Scanner scan = new Scanner(System.in);
@@ -51,7 +56,7 @@ public class Employer
          }
         try
         {
-            PreparedStatement ps = SQL_Connector.Create_PS("SELECT COUNT(*) FROM Employer WHERE Employer_ID = ?;");
+            PreparedStatement ps = SQL_Connector.Create_PS("SELECT * FROM Employer WHERE Employer_ID = ?;");
             ps.setString(1, employer_id);
             List<Object[]> sql_result = SQL_Connector.Excute_Query2(ps);
             if ((long)sql_result.get(0)[0] == 0)
@@ -59,6 +64,7 @@ public class Employer
                 System.out.println("[Error] Employer ID does not exist!");
                 return;
             }
+            company = (String)sql_result.get(0)[2];
         }
         catch (Exception ex)
         {
@@ -86,22 +92,30 @@ public class Employer
                 System.out.println("[ERROR] This employee does not exist or has a job currently!");
                 return;
             }
-        }
-        catch (Exception ex)
-        {
-            System.out.println("[ERROR] " + ex);
-            return;
-        }
-        try
-        {
-            PreparedStatement ps = SQL_Connector.Create_PS("SELECT COUNT(Employee_ID) FROM Employment_History b WHERE b.Employee_ID NOT IN (SELECT Employee_ID FROM Employment_History a WHERE a.END IS NULL) AND b.Employee.ID = ?;");
-            ps.setString(0, employee_id);
-            List<Object[]> sql_result = SQL_Connector.Excute_Query2(ps);
+            ps = SQL_Connector.Create_PS("SELECT Position_ID FROM marked WHERE Position_ID IN (SELECT Position_ID FROM Position WHERE Employer_ID = ? AND STATUS = TRUE) AND Employee_ID = ? AND STATUS = TRUE;");
+            ps.setString(1, employer_id);
+            ps.setString(2, employee_id);
+            sql_result = SQL_Connector.Excute_Query2(ps);
             if ((long)sql_result.get(0)[0] == 0)
             {
-                System.out.println("[ERROR] This employee has a job currently!");
+                System.out.println("[ERROR] This employee does not mark any jobs or has not been interviewed!");
                 return;
             }
+            String targeted_positionID = (String)sql_result.get(0)[0];
+            ps = SQL_Connector.Create_PS("UPDATE Position SET Status=FALSE WHERE Position_ID = ?;");
+            ps.setString(1, targeted_positionID);
+            SQL_Connector.Excute_NonReturnQuery(ps);
+            //Position_ID, Employee_ID, Start, End
+            ps = SQL_Connector.Create_PS("INSERT INTO Employment_History VALUES (?, ?, ?, ?);");
+            ps.setString(1, targeted_positionID);
+            ps.setString(2, employee_id);
+            java.sql.Date date = new java.sql.Date(Calendar.getInstance().getTime().getTime());
+            ps.setDate(3, date);
+            ps.setNull(4, java.sql.Types.DATE);
+            SQL_Connector.Excute_NonReturnQuery(ps);
+            System.out.println("An Employment History record is created, details are:");
+            System.out.println("Employee_ID,\tCompany,\tPosition_ID,\tStart,\tEnd");
+            System.out.println(employee_id + ",\t" + company +",\t" + targeted_positionID + ",\t" + new SimpleDateFormat("yyyy-MM-dd").format(date) +",\tNULL");
         }
         catch (Exception ex)
         {
