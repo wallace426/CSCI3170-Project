@@ -30,9 +30,83 @@ public class Employer
             else if (option == 2)
                 Arrange_Interview();
             else if (option == 3)
-            {}
+                Accept_Employee();
             else if (option == 4)
                 break;
+        }
+    }
+    private static void Accept_Employee()
+    {
+         String employer_id = "", employee_id ="";
+         try
+         {
+            Scanner scan = new Scanner(System.in);
+            System.out.println("Please enter your ID.");
+            employer_id = scan.nextLine();
+         }
+         catch (Exception ex)
+         {
+             System.out.println("[ERROR] Input Error");
+             return;
+         }
+        try
+        {
+            PreparedStatement ps = SQL_Connector.Create_PS("SELECT COUNT(*) FROM Employer WHERE Employer_ID = ?;");
+            ps.setString(1, employer_id);
+            List<Object[]> sql_result = SQL_Connector.Excute_Query2(ps);
+            if ((long)sql_result.get(0)[0] == 0)
+            {
+                System.out.println("[Error] Employer ID does not exist!");
+                return;
+            }
+        }
+        catch (Exception ex)
+        {
+            System.out.println("[Error] " + ex);
+            return;
+        }
+        try
+         {
+            Scanner scan = new Scanner(System.in);
+            System.out.println("Please enter the Employee_ID you want to hire.");
+            employee_id = scan.nextLine();
+         }
+         catch (Exception ex)
+         {
+             System.out.println("[ERROR] Input Error");
+             return;
+         }
+        try
+        {
+            PreparedStatement ps = SQL_Connector.Create_PS("SELECT COUNT(Employee_ID) FROM Employment_History b WHERE b.Employee_ID NOT IN (SELECT Employee_ID FROM Employment_History a WHERE a.END IS NULL) AND b.Employee.ID = ?;");
+            ps.setString(1, employee_id);
+            List<Object[]> sql_result = SQL_Connector.Excute_Query2(ps);
+            if ((long)sql_result.get(0)[0] == 0)
+            {
+                System.out.println("[ERROR] This employee does not exist or has a job currently!");
+                return;
+            }
+        }
+        catch (Exception ex)
+        {
+            System.out.println("[ERROR] " + ex);
+            return;
+        }
+        try
+        {
+            PreparedStatement ps = SQL_Connector.Create_PS("SELECT COUNT(Employee_ID) FROM Employment_History b WHERE b.Employee_ID NOT IN (SELECT Employee_ID FROM Employment_History a WHERE a.END IS NULL) AND b.Employee.ID = ?;");
+            ps.setString(0, employee_id);
+            List<Object[]> sql_result = SQL_Connector.Excute_Query2(ps);
+            if ((long)sql_result.get(0)[0] == 0)
+            {
+                System.out.println("[ERROR] This employee has a job currently!");
+                return;
+            }
+        }
+        catch (Exception ex)
+        {
+            System.out.println("[ERROR] " + ex);
+            return;
         }
     }
     private static void Arrange_Interview()
