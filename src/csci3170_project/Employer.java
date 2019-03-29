@@ -59,7 +59,7 @@ public class Employer
             PreparedStatement ps = SQL_Connector.Create_PS("SELECT * FROM Employer WHERE Employer_ID = ?;");
             ps.setString(1, employer_id);
             List<Object[]> sql_result = SQL_Connector.Excute_Query2(ps);
-            if ((long)sql_result.get(0)[0] == 0)
+            if (sql_result.isEmpty())
             {
                 System.out.println("[Error] Employer ID does not exist!");
                 return;
@@ -84,10 +84,10 @@ public class Employer
          }
         try
         {
-            PreparedStatement ps = SQL_Connector.Create_PS("SELECT COUNT(Employee_ID) FROM Employment_History b WHERE b.Employee_ID NOT IN (SELECT Employee_ID FROM Employment_History a WHERE a.END IS NULL) AND b.Employee.ID = ?;");
+            PreparedStatement ps = SQL_Connector.Create_PS("SELECT COUNT(Employee_ID) FROM Employment_History b WHERE b.Employee_ID NOT IN (SELECT Employee_ID FROM Employment_History a WHERE a.END IS NULL) AND b.Employee_ID = ?;");
             ps.setString(1, employee_id);
             List<Object[]> sql_result = SQL_Connector.Excute_Query2(ps);
-            if ((long)sql_result.get(0)[0] == 0)
+            if (sql_result.isEmpty())
             {
                 System.out.println("[ERROR] This employee does not exist or has a job currently!");
                 return;
@@ -96,7 +96,7 @@ public class Employer
             ps.setString(1, employer_id);
             ps.setString(2, employee_id);
             sql_result = SQL_Connector.Excute_Query2(ps);
-            if ((long)sql_result.get(0)[0] == 0)
+            if (sql_result.isEmpty())
             {
                 System.out.println("[ERROR] This employee does not mark any jobs or has not been interviewed!");
                 return;
@@ -143,7 +143,7 @@ public class Employer
             PreparedStatement ps = SQL_Connector.Create_PS("SELECT COUNT(*) FROM Employer WHERE Employer_ID = ?;");
             ps.setString(1, employer_id);
             List<Object[]> sql_result = SQL_Connector.Excute_Query2(ps);
-            if ((long)sql_result.get(0)[0] == 0)
+            if (sql_result.isEmpty())
             {
                 System.out.println("[Error] Employer ID does not exist!");
                 return;
@@ -151,7 +151,7 @@ public class Employer
             ps = SQL_Connector.Create_PS("SELECT Position_ID FROM Position WHERE Employer_ID = ? and Status = TRUE;");
             ps.setString(1, employer_id);
             sql_result = SQL_Connector.Excute_Query2(ps);
-            if (sql_result.size() == 0)
+            if (sql_result.isEmpty())
             {
                 System.out.println("[Error] No available recuriment position.");
                 return;
@@ -181,10 +181,10 @@ public class Employer
         List<String> list_empolyeeID = new ArrayList<>();
         try
         {
-            PreparedStatement ps = SQL_Connector.Create_PS("SELECT * FROM Employee NATURAL JOIN ( SELECT Employee_ID FROM marked WHERE Position_ID = ? AND Status = FALSE) AS T;");
+            PreparedStatement ps = SQL_Connector.Create_PS("SELECT * FROM Employee NATURAL JOIN ( SELECT Employee_ID FROM marked WHERE Position_ID = ? AND Status = TRUE) AS T;");
             ps.setString(1, selected_positionID);
             List<HashMap<String,Object>> sql_result = SQL_Connector.Excute_Query(ps);
-            if (sql_result.size() == 0)
+            if (sql_result.isEmpty())
             {
                 System.out.println("[Error] No employee has marked this position as interested.");
                 return;
@@ -193,7 +193,7 @@ public class Employer
             for (HashMap<String, Object> obj : sql_result)
             {
                 list_empolyeeID.add((String) obj.get("Employee_ID"));
-                System.out.println((String) obj.get("Employee_ID") + ",\t" + (String)obj.get("Name") + ",\t" + (String)obj.get("tExpected_Salary") + ",\t" + (String)obj.get("Experience") + ",\t" + (String)obj.get("Skills"));
+                System.out.println((String) obj.get("Employee_ID") + ",\t" + (String)obj.get("Name") + ",\t" + obj.get("Expected_Salary") + ",\t" + obj.get("Experience") + ",\t" + (String)obj.get("Skills"));
             }
         }
         catch (Exception ex)
@@ -261,7 +261,7 @@ public class Employer
             PreparedStatement ps = SQL_Connector.Create_PS("SELECT COUNT(*) FROM Employer WHERE Employer_ID = ?;");
             ps.setString(1, employer_id);
             List<Object[]> sql_result = SQL_Connector.Excute_Query2(ps);
-            if ((long)sql_result.get(0)[0] == 0)
+            if (sql_result.size() == 0)
             {
                 System.out.println("[Error] Employer ID does not exist!");
                 return;
