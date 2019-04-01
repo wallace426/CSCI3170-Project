@@ -5,18 +5,14 @@
  */
 package csci3170_project;
 
-import java.io.File;
-import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Scanner;
 
 /**
  *
@@ -66,10 +62,15 @@ public class Adminstrator
     }
     private static void Load_Data()
     {
+        System.out.println("Please enter the folder path.");
+       
+        Scanner read=new Scanner(System.in);
+         String path=read.nextLine();
+
         System.out.print("Processing... ");
         try 
         {
-            for (String line : Files.readAllLines(FileSystems.getDefault().getPath("company.csv")))
+            for (String line : Files.readAllLines(FileSystems.getDefault().getPath(path+"/company.csv")))
             {
                 String[] values = line.split(",");
                 //Company, Size, Founded
@@ -80,7 +81,7 @@ public class Adminstrator
                 ps.setInt(3, Integer.parseInt(values[2]));
                 SQL_Connector.Excute_NonReturnQuery(ps);
             }
-            for (String line : Files.readAllLines(FileSystems.getDefault().getPath("employee.csv")))
+            for (String line : Files.readAllLines(FileSystems.getDefault().getPath(path+"/employee.csv")))
             {
                 String[] values = line.split(",");
                 //Employee_ID, Name, Experience, Expected_Salary, Skills
@@ -93,7 +94,7 @@ public class Adminstrator
                 ps.setString(5, values[4]);
                 SQL_Connector.Excute_NonReturnQuery(ps);
             }
-            for (String line : Files.readAllLines(FileSystems.getDefault().getPath("employer.csv")))
+            for (String line : Files.readAllLines(FileSystems.getDefault().getPath(path+"/employer.csv")))
             {
                 String[] values = line.split(",");
                 //Employer_ID, Name, Company
@@ -104,7 +105,7 @@ public class Adminstrator
                 ps.setString(3, values[2]);
                 SQL_Connector.Excute_NonReturnQuery(ps);
             }
-            for (String line : Files.readAllLines(FileSystems.getDefault().getPath("history.csv")))
+            for (String line : Files.readAllLines(FileSystems.getDefault().getPath(path+"/history.csv")))
             {
                 String[] values = line.split(",");
                 //Position_ID, Employee_ID, Start, End
@@ -119,7 +120,7 @@ public class Adminstrator
                     ps.setDate(4, Date.valueOf(values[4]));
                 SQL_Connector.Excute_NonReturnQuery(ps);
             }
-            for (String line : Files.readAllLines(FileSystems.getDefault().getPath("position.csv")))
+            for (String line : Files.readAllLines(FileSystems.getDefault().getPath(path+"/position.csv")))
             {
                 String[] values = line.split(",");
                 //Position_ID, Position_Title, Salary, Experience, Status, Employer_ID
@@ -145,12 +146,12 @@ public class Adminstrator
     {
         System.out.print("Processing... ");
         String query = "";
-        query += "CREATE TABLE Employee( Employee_ID varchar(6) primary key, Name varchar(30) not null, Expected_Salary integer, Experience integer, Skills varchar(50) not null);";
-        query += "CREATE TABLE Company( Company varchar(30) primary key, Size integer, Founded integer );";
+        query += "CREATE TABLE Employee( Employee_ID varchar(6) primary key, Name varchar(30) not null, Expected_Salary integer CHECK (Expected_Salary>0), Experience integer CHECK (Experience>0), Skills varchar(50) not null);";
+        query += "CREATE TABLE Company( Company varchar(30) primary key, Size integer CHECK (Size>0), Founded year );";
         query += "CREATE TABLE Employer( Employer_ID varchar(6) primary key, Name varchar(30) not null, Company varchar(30) not null);";
-        query += "CREATE TABLE `Position`( Position_ID varchar(6) primary key, Position_Title varchar(30) not null, Salary integer, Experience integer, Status bool, Employer_ID varchar(6) not null, FOREIGN KEY (Employer_ID) REFERENCES Employer (Employer_ID));";
+        query += "CREATE TABLE `Position`( Position_ID varchar(6) primary key, Position_Title varchar(30) not null, Salary integer CHECK (Salary>0), Experience integer CHECK (Experience>=0), Status bool, Employer_ID varchar(6) not null, FOREIGN KEY (Employer_ID) REFERENCES Employer (Employer_ID));";
         query += "CREATE TABLE Employment_History(  Position_ID varchar(6), Employee_ID varchar(6), Start DATE, End DATE,  primary key(Employee_ID, Start), FOREIGN KEY (Employee_ID) REFERENCES Employee (Employee_ID), FOREIGN KEY (Position_ID) REFERENCES Position (Position_ID));";
-        query += "CREATE TABLE marked(  Position_ID varchar(6), Employee_ID varchar(6), Status bool, primary key(Employee_ID, Position_ID), FOREIGN KEY (Employee_ID) REFERENCES Employee (Employee_ID), FOREIGN KEY (Position_ID) REFERENCES Position (Position_ID) );";
+        query += "CREATE TABLE marked( Position_ID varchar(6), Employee_ID varchar(6), Status bool, primary key(Employee_ID, Position_ID), FOREIGN KEY (Employee_ID) REFERENCES Employee (Employee_ID), FOREIGN KEY (Position_ID) REFERENCES Position (Position_ID) );";
         try 
         {
             PreparedStatement ps = SQL_Connector.Create_PS(query);
