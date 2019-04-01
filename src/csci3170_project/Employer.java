@@ -156,8 +156,16 @@ public class Employer
                 System.out.println("[Error] No available recuriment position.");
                 return;
             }
+             if (sql_result.size()==1)
+                System.out.println("The id of position recruitment posted by you is:");
+             else 
+                 System.out.println("The id of position recruitments posted by you are:");
+             
             for (Object[] obj : sql_result)
+            {
+                System.out.println((String)obj[0]);
                 list_positionID.add((String)obj[0]);
+            }
         }
         catch (Exception ex)
         {
@@ -165,6 +173,7 @@ public class Employer
             return;
         }
         String selected_positionID = "";
+        
         try
         {
             Scanner scan = new Scanner(System.in);
