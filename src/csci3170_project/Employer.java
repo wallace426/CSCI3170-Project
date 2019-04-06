@@ -84,7 +84,7 @@ public class Employer
          }
         try
         {
-            PreparedStatement ps = SQL_Connector.Create_PS("SELECT COUNT(Employee_ID) FROM Employment_History b WHERE b.Employee_ID NOT IN (SELECT Employee_ID FROM Employment_History a WHERE a.END IS NULL) AND b.Employee_ID = ?;");
+            PreparedStatement ps = SQL_Connector.Create_PS("SELECT COUNT(Employee_ID) FROM Employee b WHERE b.Employee_ID NOT IN (SELECT Employee_ID FROM Employment_History a WHERE a.END IS NULL) AND b.Employee_ID = ?;");
             ps.setString(1, employee_id);
             List<Object[]> sql_result = SQL_Connector.Excute_Query2(ps);
             if ((long)sql_result.get(0)[0] == 0)
@@ -276,7 +276,7 @@ public class Employer
                 return;
             }
             //Counting potential employee
-            ps = SQL_Connector.Create_PS("SELECT COUNT(DISTINCT Employee_ID) FROM Employee NATURAL JOIN ( SELECT Employee_ID FROM Employment_History b WHERE b.Employee_ID NOT IN (SELECT Employee_ID FROM Employment_History a WHERE a.END IS NULL)) AS T WHERE Skills LIKE ? and Experience >= ? and Expected_Salary <= ?;");
+            ps = SQL_Connector.Create_PS("SELECT COUNT(DISTINCT Employee_ID) FROM Employee NATURAL JOIN ( SELECT Employee_ID FROM Employee b WHERE b.Employee_ID NOT IN (SELECT Employee_ID FROM Employment_History a WHERE a.END IS NULL)) AS T WHERE Skills LIKE ? and Experience >= ? and Expected_Salary <= ?;");
             ps.setString(1, "%"+position_title+"%");
             ps.setInt(2, experience);
             ps.setInt(3, salary);
