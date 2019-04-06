@@ -87,7 +87,7 @@ public class Employer
             PreparedStatement ps = SQL_Connector.Create_PS("SELECT COUNT(Employee_ID) FROM Employment_History b WHERE b.Employee_ID NOT IN (SELECT Employee_ID FROM Employment_History a WHERE a.END IS NULL) AND b.Employee_ID = ?;");
             ps.setString(1, employee_id);
             List<Object[]> sql_result = SQL_Connector.Excute_Query2(ps);
-            if (sql_result.isEmpty())
+            if ((long)sql_result.get(0)[0] == 0)
             {
                 System.out.println("[ERROR] This employee does not exist or has a job currently!");
                 return;
@@ -143,7 +143,7 @@ public class Employer
             PreparedStatement ps = SQL_Connector.Create_PS("SELECT COUNT(*) FROM Employer WHERE Employer_ID = ?;");
             ps.setString(1, employer_id);
             List<Object[]> sql_result = SQL_Connector.Excute_Query2(ps);
-            if (sql_result.isEmpty())
+            if ((long)sql_result.get(0)[0] == 0)
             {
                 System.out.println("[Error] Employer ID does not exist!");
                 return;
@@ -297,7 +297,7 @@ public class Employer
             ps.setBoolean(5, true);
             ps.setString(6, employer_id);
             SQL_Connector.Excute_NonReturnQuery(ps);
-            System.out.println(potential_count + " potential employees are found. The position recruitment is posted.");
+            System.out.println(potential_count + " potential employees are found. The position recruitment is posted (ID: "+ ID +").");
         }
         catch (Exception ex)
         {
