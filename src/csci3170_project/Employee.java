@@ -108,8 +108,9 @@ public class Employee {
                
                 for (HashMap<String, Object> obj : sql_result)
                 {
-                if (obj.get("Position_ID").equals(position_id))
-                    contains=true;
+                    //System.out.println(obj.get("Position_ID"));
+                    if (obj.get("Position_ID").equals(position_id))
+                        contains=true;
                 }
                 if (!contains){
                     System.out.println("ERROR! Please check the position ID.");
