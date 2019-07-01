@@ -4,10 +4,8 @@
  * and open the template in the editor.
  */
 package csci3170_project;
-
 import java.util.Date;
 import java.sql.PreparedStatement;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
